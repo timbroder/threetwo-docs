@@ -9,7 +9,7 @@ const config = {
   title: 'ThreeTwo!',
   tagline: 'Start Flipping!',
   url: 'https://rishighan.github.io',
-  baseUrl: '/threetwo-docs/',
+  baseUrl: '/threetwo/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
