@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkthreetwo_docs=self.webpackChunkthreetwo_docs||[]).push([[973],{4453:function(e){e.exports=JSON.parse('{"allTagsPath":"/threetwo/blog/tags","slug":"/threetwo/blog/tags/hello","name":"hello","count":2,"permalink":"/threetwo/blog/tags/hello"}')}}]);
