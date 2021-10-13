@@ -17,7 +17,7 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: 'Don\'t Hate, Curate.',
-    image: '/img/curate.svg',
+    image: './img/curate.svg',
     description: (
       <>
         Browse, search, discover your comic book library that you have so proudly built from scratch.
@@ -26,7 +26,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'No Fuss DC++',
-    image: '',
+    image: './img/dcpp.svg',
     description: (
       <>
         With first-class support for the excellent <code>AirDC++</code>, find and acquire hidden gems.
@@ -35,7 +35,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Shine with Comic Vine',
-    image: '',
+    image: './img/cv.svg',
     description: (
       <>
         Scrape Comic Vine's exhaustive comic book database to analyze and clean up your library's metadata.
