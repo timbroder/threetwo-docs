@@ -17,7 +17,7 @@ type FeatureItem = {
 const FeatureList: FeatureItem[] = [
   {
     title: 'Don\'t Hate, Curate.',
-    image: '',
+    image: '/img/curate.svg',
     description: (
       <>
         Browse, search, discover your comic book library that you have so proudly built from scratch.
