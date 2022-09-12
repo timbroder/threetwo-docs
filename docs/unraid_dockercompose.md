@@ -53,131 +53,130 @@ First things first, let's go over what the pre-requisites are:
 2. Create a new stack, give it a name.
 3. Hover over the gear next to it and click on `Edit Stack`.
 4. Copy-paste this into the textarea:
-   ```yaml
-   version: "3.7"
+```yaml
+version: "3.7"
 
-   x-userdata-volume:
-   &userdata-volume
-   type: bind
-   source: ${USERDATA_DIRECTORY}
-   target: /userdata
+x-userdata-volume: &userdata-volume
+  type: bind
+  source: ${USERDATA_DIRECTORY}
+  target: /userdata
 
-   x-comics-volume:
-   &comics-volume
-   type: bind
-   source: ${COMICS_DIRECTORY}
-   target: /comics
+x-comics-volume: &comics-volume
+  type: bind
+  source: ${COMICS_DIRECTORY}
+  target: /comics
 
-   services:
-   threetwo:
-      build:
-         context: https://github.com/rishighan/threetwo.git
-         dockerfile: Dockerfile
-      image: frishi/threetwo
-      container_name: threetwo-ui
-      env_file: /boot/config/plugins/compose.manager/projects/ThreeTwo/.env
-      restart: unless-stopped
-      ports:
-         - "8050:8050"
-         - "3050:3050"
-      links:
-         - core-services
-      depends_on:
-         - db
-         - elasticsearch
-         - redis
-      networks:
-         - proxy
+services:
+threetwo:
+   build:
+      context: https://github.com/rishighan/threetwo.git
+      dockerfile: Dockerfile
+   image: frishi/threetwo
+   container_name: threetwo-ui
+   env_file: /boot/config/plugins/compose.manager/projects/ThreeTwo/.env
+   restart: unless-stopped
+   ports:
+      - "8050:8050"
+      - "3050:3050"
+   links:
+      - core-services
+   depends_on:
+      - db
+      - elasticsearch
+      - redis
+   networks:
+      - proxy
 
-   metadata-service:
-      build:
-         context: https://github.com/rishighan/threetwo-metadata-service.git
-      image: frishi/threetwo-metadata-service
-      container_name: metadata-service
-      ports:
-         - "3080:3080"
-      environment:
-         SERVICES: api,comicvine
-      env_file: /boot/config/plugins/compose.manager/projects/ThreeTwo/.env
-      depends_on:
-         - redis
-      volumes:
-         - *comics-volume
-         - *userdata-volume
-      networks:
-         - proxy
+metadata-service:
+   build:
+      context: https://github.com/rishighan/threetwo-metadata-service.git
+   image: frishi/threetwo-metadata-service
+   container_name: metadata-service
+   ports:
+      - "3080:3080"
+   environment:
+      SERVICES: api,comicvine
+   env_file: /boot/config/plugins/compose.manager/projects/ThreeTwo/.env
+   depends_on:
+      - redis
+   volumes:
+      - *comics-volume
+      - *userdata-volume
+   networks:
+      - proxy
 
-   core-services:
-      build:
-         context: https://github.com/rishighan/threetwo-core-service.git
-      image: frishi/threetwo-core-service
-      container_name: core-services
-      ports:
-         - "3000:3000"
-         - "3001:3001"
-      depends_on:
-         - db
-         - redis
-         - elasticsearch
-      environment:
-         name: core-services
-         SERVICES: api,library,importqueue,settings,search,socket,imagetransformation,opds
-      env_file: /boot/config/plugins/compose.manager/projects/ThreeTwo/.env
-      volumes:
-         - *comics-volume
-         - *userdata-volume
-
-      networks:
-         - proxy
-
-   db:
-      image: "bitnami/mongodb:latest"
-      container_name: database
-      networks:
-         - proxy
-      ports:
-         - "27017:27017"
-      volumes:
-         - "mongodb_data:/bitnami/mongodb"
-
-   redis:
-      image: "bitnami/redis:latest"
-      container_name: queue
-      environment:
-         ALLOW_EMPTY_PASSWORD: "yes"
-      networks:
-         - proxy
-      ports:
-         - "6379:6379"
-
-   elasticsearch:
-      image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
-      container_name: elasticsearch
-      environment:
-         - "discovery.type=single-node"
-         - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-         - "xpack.security.enabled=true"
-         - "xpack.security.authc.api_key.enabled=true"
-         - "ELASTIC_PASSWORD=password"
-      ulimits:
-         memlock:
-         soft: -1
-         hard: -1
-      ports:
-         - 9200:9200
-      networks:
-         - proxy
+core-services:
+   build:
+      context: https://github.com/rishighan/threetwo-core-service.git
+   image: frishi/threetwo-core-service
+   container_name: core-services
+   ports:
+      - "3000:3000"
+      - "3001:3001"
+   depends_on:
+      - db
+      - redis
+      - elasticsearch
+   environment:
+      name: core-services
+      SERVICES: api,library,importqueue,settings,search,socket,imagetransformation,opds
+   env_file: /boot/config/plugins/compose.manager/projects/ThreeTwo/.env
+   volumes:
+      - *comics-volume
+      - *userdata-volume
 
    networks:
-   proxy:
-      external: true
+      - proxy
 
+db:
+   image: "bitnami/mongodb:latest"
+   container_name: database
+   networks:
+      - proxy
+   ports:
+      - "27017:27017"
    volumes:
-   mongodb_data:
-      driver: local
-   elasticsearch:
-      driver: local
+      - "mongodb_data:/bitnami/mongodb"
+
+redis:
+   image: "bitnami/redis:latest"
+   container_name: queue
+   environment:
+      ALLOW_EMPTY_PASSWORD: "yes"
+   networks:
+      - proxy
+   ports:
+      - "6379:6379"
+
+elasticsearch:
+   image: docker.elastic.co/elasticsearch/elasticsearch:7.16.2
+   container_name: elasticsearch
+   environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "xpack.security.enabled=true"
+      - "xpack.security.authc.api_key.enabled=true"
+      - "ELASTIC_PASSWORD=password"
+   ulimits:
+      memlock:
+      soft: -1
+      hard: -1
+   ports:
+      - 9200:9200
+   networks:
+      - proxy
+
+networks:
+proxy:
+   external: true
+
+volumes:
+mongodb_data:
+   driver: local
+elastic:
+  driver: local
    ```
+
 5. Click `Save Changes`
 6. Click `Compose Up` and check for errors.
 7. If all goes well, you should see the following containers appear as icons without images in the unRAID `Docker Containers` panel:
